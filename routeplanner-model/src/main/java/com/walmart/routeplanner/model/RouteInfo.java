@@ -6,6 +6,11 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+/**
+ * Route data, composed by source and destination points
+ * and a cost to traverse it.
+ * @author Rodrigo Marchesini
+ */
 public class RouteInfo implements Serializable {
 
     private static final long serialVersionUID = -5760830175224329963L;
@@ -14,6 +19,11 @@ public class RouteInfo implements Serializable {
     private final String to;
     private final Double cost;
 
+    /**
+     * @param from source
+     * @param to destination
+     * @param cost cost
+     */
     private RouteInfo(String from, String to, Double cost) {
         this.from = from;
         this.to = to;

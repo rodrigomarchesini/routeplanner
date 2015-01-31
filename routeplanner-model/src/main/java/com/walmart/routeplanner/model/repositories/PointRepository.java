@@ -13,6 +13,19 @@ import com.walmart.routeplanner.model.entity.Point;
 public interface PointRepository extends GraphRepository<Point> {
 
     /**
+     * Find a Point by its name and map.
+     * @param name Point's name
+     * @param mapName Map's name
+     * @return Point
+     */
+    @Query(value = 
+            "MATCH (p:Point) " +
+            "WHERE p.name = {0} " +
+            "  AND p.mapName = {1} " +
+            "RETURN p")
+    Point findByNameAndMap(String name, String mapName);
+    
+    /**
      * Delete all points and routes labeled as {@code mapName}.
      * @param mapName Map's name
      */

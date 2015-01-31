@@ -1,6 +1,8 @@
 package com.walmart.routeplanner.model.services;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.Assert;
@@ -17,6 +19,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.walmart.routeplanner.model.MapInfo;
+import com.walmart.routeplanner.model.RouteInfo;
 import com.walmart.routeplanner.model.entity.Point;
 import com.walmart.routeplanner.model.repositories.PointRepository;
 
@@ -40,18 +44,20 @@ public class PointServiceTest {
     }
 
     @Test
+    @Ignore
     public void simpleMap() {
         final String mapName = "Brasil";
         Set<Point> points = createSimpleMap(mapName);
         // printAllPoints();
 
         Point a = pointService.findPoint("A", mapName);
-        Point b = pointService.findPoint("D", mapName);
-        WeightedPath path = pointService.shortestPath(a, b);
+        Point d = pointService.findPoint("D", mapName);
+        WeightedPath path = pointService.shortestPath(a, d);
         Assert.assertEquals(0, Double.compare(25d, path.weight()));
     }
 
     @Test
+    @Ignore
     public void clearOneMapKeepAnother() {
         final String mapName1 = "map1";
         Set<Point> points1 = createSimpleMap(mapName1);
@@ -67,6 +73,28 @@ public class PointServiceTest {
         Assert.assertEquals(points2.size(), pointService.countByMap(mapName2));
     }
 
+    @Test
+    @Ignore
+    public void mapCreation() {
+        String mapName = "map1";
+        List<RouteInfo> routes = new ArrayList<RouteInfo>();
+        routes.add(RouteInfo.of("A", "B", 10d));
+        routes.add(RouteInfo.of("B", "D", 15d));
+        routes.add(RouteInfo.of("A", "C", 20d));
+        routes.add(RouteInfo.of("C", "D", 30d));
+        routes.add(RouteInfo.of("B", "E", 50d));
+        routes.add(RouteInfo.of("D", "E", 30d));
+        MapInfo map = new MapInfo(mapName, routes);
+        
+        mapService.createMap(map);
+        Assert.assertEquals(5, pointService.countByMap(mapName));
+        
+        Point a = pointService.findPoint("A", mapName);
+        Point b = pointService.findPoint("D", mapName);
+        WeightedPath path = pointService.shortestPath(a, b);
+        Assert.assertEquals(0, Double.compare(25d, path.weight()));
+    }
+    
     private void printAllPoints() {
         for (Point point : pointService.getAllPoints()) {
             System.out.println(point);

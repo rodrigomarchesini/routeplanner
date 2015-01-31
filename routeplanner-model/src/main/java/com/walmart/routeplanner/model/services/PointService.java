@@ -40,7 +40,8 @@ public class PointService {
     }
 
     public Point findPoint(String name, String mapName) {
-        return pointRepository.findBySchemaPropertyValue("name", name);
+//        return pointRepository.findBySchemaPropertyValue("name", name);
+        return pointRepository.findByNameAndMap(name, mapName);
     }
 
     public int countByMap(String mapName) {

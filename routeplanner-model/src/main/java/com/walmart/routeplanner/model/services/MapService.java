@@ -1,8 +1,6 @@
 package com.walmart.routeplanner.model.services;
 
-import java.util.List;
-
-import com.walmart.routeplanner.model.RouteInfo;
+import com.walmart.routeplanner.model.MapInfo;
 import com.walmart.routeplanner.model.ShortestPathInfo;
 
 /**
@@ -14,9 +12,17 @@ public interface MapService {
 
     //TODO createOrReplaceMap?
     
+    /**
+     * Deletes a map, removing all points and routes.
+     * @param mapName Map's name
+     */
     void deleteMap(String mapName);
     
-    void createMap(String mapName, List<RouteInfo> routeInfos);
+    /**
+     * Creates the map represented by the {@code MapInfo}.
+     * @param map Map's points and routes
+     */
+    void createMap(MapInfo map);
     
     ShortestPathInfo shortestPath(String mapName, String from, String to);
 }
