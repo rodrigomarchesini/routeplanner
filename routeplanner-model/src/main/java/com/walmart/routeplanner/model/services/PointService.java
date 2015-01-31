@@ -43,10 +43,13 @@ public class PointService {
         return pointRepository.findBySchemaPropertyValue("name", name);
     }
 
+    public int countByMap(String mapName) {
+        return pointRepository.countPointsByMap(mapName);
+    }
+
     public WeightedPath shortestPath(Point from, Point to) {
         Node fromNode = template.getNode(from.getId());
         Node toNode = template.getNode(to.getId());
-        ;
 
         return GraphAlgoFactory
                 .dijkstra(PathExpanders.allTypesAndDirections(), "cost")
