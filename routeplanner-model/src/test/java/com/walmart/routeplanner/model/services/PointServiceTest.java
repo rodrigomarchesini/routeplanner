@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.walmart.routeplanner.model.MapInfo;
 import com.walmart.routeplanner.model.RouteInfo;
 import com.walmart.routeplanner.model.entity.Point;
-import com.walmart.routeplanner.model.repositories.PointRepository;
 
 @ContextConfiguration(locations = "classpath:/spring-context.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -85,16 +84,16 @@ public class PointServiceTest {
         routes.add(RouteInfo.of("B", "E", 50d));
         routes.add(RouteInfo.of("D", "E", 30d));
         MapInfo map = new MapInfo(mapName, routes);
-        
+
         mapService.createMap(map);
         Assert.assertEquals(5, pointService.countByMap(mapName));
-        
+
         Point a = pointService.findPoint("A", mapName);
         Point b = pointService.findPoint("D", mapName);
         WeightedPath path = pointService.shortestPath(a, b);
         Assert.assertEquals(0, Double.compare(25d, path.weight()));
     }
-    
+
     private void printAllPoints() {
         for (Point point : pointService.getAllPoints()) {
             System.out.println(point);

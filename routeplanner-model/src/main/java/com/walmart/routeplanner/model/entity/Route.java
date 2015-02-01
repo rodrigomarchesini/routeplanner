@@ -29,12 +29,9 @@ public class Route {
     }
 
     /**
-     * @param start
-     *            Origin point
-     * @param end
-     *            Destination point
-     * @param cost
-     *            Cost of the route
+     * @param start Origin point
+     * @param end Destination point
+     * @param cost Cost of the route
      */
     public Route(Point start, Point end, Double cost) {
         this.start = start;

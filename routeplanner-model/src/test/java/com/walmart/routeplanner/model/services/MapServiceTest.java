@@ -18,12 +18,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.walmart.routeplanner.model.MapInfo;
 import com.walmart.routeplanner.model.RouteInfo;
+import com.walmart.routeplanner.model.ShortestPathInfo;
 import com.walmart.routeplanner.model.entity.Point;
 import com.walmart.routeplanner.model.repositories.PointRepository;
 
 /**
  * Tests for MapService
- * 
+ *
  * @author Rodrigo Marchesini
  */
 @ContextConfiguration(locations = "classpath:/spring-context.xml")
@@ -113,6 +114,44 @@ public class MapServiceTest {
         Assert.assertEquals(0, Double.compare(50d, (Double) be.getProperty("cost")));
     }
 
+    @Test
+    public void shortestPathInSimpleMap() {
+        String mapName = "map1";
+        MapInfo map = createSimpleMapInfo(mapName);
+
+        mapService.createMap(map);
+
+        ShortestPathInfo path = mapService.shortestPath(mapName, "A", "D");
+
+        Assert.assertTrue(path.exists());
+        Assert.assertEquals(0, Double.compare(25d, path.getTotalCost()));
+        Assert.assertEquals("A B D", path.getPoints());
+    }
+
+    @Test
+    public void shortestPathNotFoundInDisconnectedMap() {
+        String mapName = "map1";
+        MapInfo map = createDisconnectedMapInfo(mapName);
+
+        mapService.createMap(map);
+
+        ShortestPathInfo path;
+        path = mapService.shortestPath(mapName, "A", "B");
+        Assert.assertFalse(path.exists());
+        Assert.assertEquals(0, Double.compare(0d, path.getTotalCost()));
+        Assert.assertTrue(path.getPoints().isEmpty());
+
+        path = mapService.shortestPath(mapName, "C", "A");
+        Assert.assertFalse(path.exists());
+        Assert.assertEquals(0, Double.compare(0d, path.getTotalCost()));
+        Assert.assertTrue(path.getPoints().isEmpty());
+
+        path = mapService.shortestPath(mapName, "A", "E");
+        Assert.assertFalse(path.exists());
+        Assert.assertEquals(0, Double.compare(0d, path.getTotalCost()));
+        Assert.assertTrue(path.getPoints().isEmpty());
+    }
+
     private MapInfo createSimpleMapInfo(String mapName) {
         List<RouteInfo> routes = new ArrayList<RouteInfo>();
         routes.add(RouteInfo.of("A", "B", 10d));
@@ -136,6 +175,16 @@ public class MapServiceTest {
         // duplications
         routes.add(RouteInfo.of("A", "B", 2d));
         routes.add(RouteInfo.of("B", "E", 50d));
+        MapInfo map = new MapInfo(mapName, routes);
+        return map;
+    }
+
+    private MapInfo createDisconnectedMapInfo(String mapName) {
+        List<RouteInfo> routes = new ArrayList<RouteInfo>();
+        routes.add(RouteInfo.of("A", "C", 1d));
+        routes.add(RouteInfo.of("B", "C", 1d));
+        routes.add(RouteInfo.of("D", "E", 2d));
+        routes.add(RouteInfo.of("D", "F", 1d));
         MapInfo map = new MapInfo(mapName, routes);
         return map;
     }

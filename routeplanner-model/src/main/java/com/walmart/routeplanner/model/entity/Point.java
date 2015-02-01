@@ -57,7 +57,7 @@ public class Point {
 
     /**
      * Creates a route from this {@code Point} to {@code destination}.
-     * 
+     *
      * @param destination
      *            Destination point
      * @param cost
@@ -70,10 +70,10 @@ public class Point {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-        .append("id", id)
-        .append("name", name)
-        .append("mapName", mapName)
-        .toString();
+                .append("id", id)
+                .append("name", name)
+                .append("mapName", mapName)
+                .toString();
     }
 
     @Override

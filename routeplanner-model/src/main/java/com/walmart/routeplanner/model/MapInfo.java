@@ -8,7 +8,7 @@ import java.util.Set;
 
 /**
  * Map data structure, composed by a name a list of routes.
- * 
+ *
  * @author Rodrigo Marchesini
  */
 public class MapInfo implements Serializable {
@@ -48,7 +48,6 @@ public class MapInfo implements Serializable {
         return routes;
     }
 
-    // TODO lazy? used only once?
     public Set<String> getPoints() {
         return points;
     }

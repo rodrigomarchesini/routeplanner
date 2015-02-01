@@ -7,8 +7,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
- * Route data, composed by source and destination points
+ * Route data, composed by origin and destination points
  * and a cost to traverse it.
+ * 
  * @author Rodrigo Marchesini
  */
 public class RouteInfo implements Serializable {
@@ -20,7 +21,7 @@ public class RouteInfo implements Serializable {
     private final Double cost;
 
     /**
-     * @param from source
+     * @param from origin
      * @param to destination
      * @param cost cost
      */
