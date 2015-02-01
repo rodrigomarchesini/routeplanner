@@ -8,7 +8,7 @@
 	<packaging>pom</packaging>
 	<name>RoutePlanner</name>
 	<modules>
-		<module>routeplanner-model</module>
+		<module>routeplanner-domain</module>
 		<module>routeplanner-services</module>
 		<module>routeplanner-web</module>
 	</modules>
