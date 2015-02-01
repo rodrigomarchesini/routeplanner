@@ -1,6 +1,7 @@
 package com.walmart.routeplanner.model.services;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Assert;
@@ -39,9 +40,6 @@ public class MapServiceTest {
     private PointRepository pointRepository;
 
     @Autowired
-    private PointService pointService;
-
-    @Autowired
     private MapService mapService;
 
     @Rollback(false)
@@ -60,13 +58,13 @@ public class MapServiceTest {
         MapInfo map2 = createSimpleMapInfo(mapName2);
         mapService.createMap(map2);
 
-        Assert.assertEquals(map1.getPoints().size(), pointService.countByMap(mapName1));
-        Assert.assertEquals(map2.getPoints().size(), pointService.countByMap(mapName2));
+        Assert.assertEquals(map1.getPoints().size(), pointRepository.countPointsByMap(mapName1));
+        Assert.assertEquals(map2.getPoints().size(), pointRepository.countPointsByMap(mapName2));
 
         mapService.deleteMap(mapName1);
 
-        Assert.assertEquals(0, pointService.countByMap(mapName1));
-        Assert.assertEquals(map2.getPoints().size(), pointService.countByMap(mapName2));
+        Assert.assertEquals(0, pointRepository.countPointsByMap(mapName1));
+        Assert.assertEquals(map2.getPoints().size(), pointRepository.countPointsByMap(mapName2));
     }
 
     @Test
@@ -75,7 +73,7 @@ public class MapServiceTest {
         MapInfo map = createSimpleMapInfo(mapName);
 
         mapService.createMap(map);
-        Assert.assertEquals(map.getPoints().size(), pointService.countByMap(mapName));
+        Assert.assertEquals(map.getPoints().size(), pointRepository.countPointsByMap(mapName));
     }
 
     @Test
@@ -88,11 +86,12 @@ public class MapServiceTest {
         MapInfo map2 = createSimpleMapInfo(mapName2);
         mapService.createMap(map2);
 
-        Point a1 = pointService.findPoint("A", mapName1);
-        Point a2 = pointService.findPoint("A", mapName2);
+        Point a1 = pointRepository.findByNameAndMap("A", mapName1);
+        Point a2 = pointRepository.findByNameAndMap("A", mapName2);
 
         Assert.assertEquals(mapName1, a1.getMapName());
         Assert.assertEquals(mapName2, a2.getMapName());
+        Assert.assertNotEquals(a1.getId(), a2.getId());
     }
 
     @Test
@@ -101,11 +100,11 @@ public class MapServiceTest {
         MapInfo map = createDuplicatedRouteMapInfo(mapName);
 
         mapService.createMap(map);
-        Assert.assertEquals(map.getPoints().size(), pointService.countByMap(mapName));
+        Assert.assertEquals(map.getPoints().size(), pointRepository.countPointsByMap(mapName));
 
-        Point a = pointService.findPoint("A", mapName);
-        Point b = pointService.findPoint("B", mapName);
-        Point e = pointService.findPoint("E", mapName);
+        Point a = pointRepository.findByNameAndMap("A", mapName);
+        Point b = pointRepository.findByNameAndMap("B", mapName);
+        Point e = pointRepository.findByNameAndMap("E", mapName);
 
         Relationship ab = template.getRelationshipBetween(a, b, "GOES_TO");
         Relationship be = template.getRelationshipBetween(b, e, "GOES_TO");
@@ -118,14 +117,30 @@ public class MapServiceTest {
     public void shortestPathInSimpleMap() {
         String mapName = "map1";
         MapInfo map = createSimpleMapInfo(mapName);
-
         mapService.createMap(map);
 
         ShortestPathInfo path = mapService.shortestPath(mapName, "A", "D");
+        assertShortestPath(path, true, 25d, "A B D");
+    }
 
-        Assert.assertTrue(path.exists());
-        Assert.assertEquals(0, Double.compare(25d, path.getTotalCost()));
-        Assert.assertEquals("A B D", path.getPoints());
+    @Test
+    public void shortestPathInSinglePointMap() {
+        String mapName = "map1";
+        MapInfo map = new MapInfo(mapName, Collections.singletonList(RouteInfo.of("A", "A", 10d)));
+        mapService.createMap(map);
+
+        ShortestPathInfo path = mapService.shortestPath(mapName, "A", "A");
+        assertShortestPath(path, true, 0d, "A");
+    }
+
+    @Test
+    public void shortestPathSameOriginAndDestination() {
+        String mapName = "map1";
+        MapInfo map = new MapInfo(mapName, Collections.singletonList(RouteInfo.of("A", "A", 10d)));
+        mapService.createMap(map);
+
+        ShortestPathInfo path = mapService.shortestPath(mapName, "A", "A");
+        assertShortestPath(path, true, 0d, "A");
     }
 
     @Test
@@ -134,22 +149,16 @@ public class MapServiceTest {
         MapInfo map = createDisconnectedMapInfo(mapName);
 
         mapService.createMap(map);
-
         ShortestPathInfo path;
+
         path = mapService.shortestPath(mapName, "A", "B");
-        Assert.assertFalse(path.exists());
-        Assert.assertEquals(0, Double.compare(0d, path.getTotalCost()));
-        Assert.assertTrue(path.getPoints().isEmpty());
+        assertShortestPath(path, false, 0d, "");
 
         path = mapService.shortestPath(mapName, "C", "A");
-        Assert.assertFalse(path.exists());
-        Assert.assertEquals(0, Double.compare(0d, path.getTotalCost()));
-        Assert.assertTrue(path.getPoints().isEmpty());
+        assertShortestPath(path, false, 0d, "");
 
         path = mapService.shortestPath(mapName, "A", "E");
-        Assert.assertFalse(path.exists());
-        Assert.assertEquals(0, Double.compare(0d, path.getTotalCost()));
-        Assert.assertTrue(path.getPoints().isEmpty());
+        assertShortestPath(path, false, 0d, "");
     }
 
     private MapInfo createSimpleMapInfo(String mapName) {
@@ -189,4 +198,13 @@ public class MapServiceTest {
         return map;
     }
 
+    private void assertShortestPath(
+            ShortestPathInfo path,
+            boolean shouldExist,
+            Double expectedCost,
+            String expectedPath) {
+        Assert.assertEquals(shouldExist, path.exists());
+        Assert.assertEquals(0, Double.compare(expectedCost, path.getTotalCost()));
+        Assert.assertEquals(expectedPath, path.getPoints());
+    }
 }

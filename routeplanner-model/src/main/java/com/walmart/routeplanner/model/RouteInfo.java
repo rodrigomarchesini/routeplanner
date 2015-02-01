@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 /**
  * Route data, composed by origin and destination points
  * and a cost to traverse it.
- * 
+ *
  * @author Rodrigo Marchesini
  */
 public class RouteInfo implements Serializable {

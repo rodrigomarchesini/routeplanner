@@ -72,28 +72,29 @@ public class MapServiceImpl implements MapService {
 
     @Override
     public ShortestPathInfo shortestPath(String mapName, String from, String to) {
-        // TODO handle from eq to
-        Point origin = pointRepository.findByNameAndMap(from, mapName);
-        Point destination = pointRepository.findByNameAndMap(to, mapName);
-
-        Node fromNode = template.getNode(origin.getId());
-        Node toNode = template.getNode(destination.getId());
-
-        WeightedPath path = GraphAlgoFactory
-                .dijkstra(PathExpanders.forTypeAndDirection(RelationshipTypes.GOES_TO, Direction.OUTGOING), "cost")
-                .findSinglePath(fromNode, toNode);
-
         ShortestPathInfo pathInfo = new ShortestPathInfo();
-        if (path != null) {
-            for (Relationship route : path.relationships()) {
-                pathInfo.addStep(RouteInfo.of(
-                        (String) route.getStartNode().getProperty("name"),
-                        (String) route.getEndNode().getProperty("name"),
-                        (Double) route.getProperty("cost")));
-            }
-            pathInfo.setTotalCost(path.weight());
-        }
 
+        if (from.equals(to)) {
+            pathInfo.addStep(from);
+        } else {
+            Point origin = pointRepository.findByNameAndMap(from, mapName);
+            Point destination = pointRepository.findByNameAndMap(to, mapName);
+
+            Node fromNode = template.getNode(origin.getId());
+            Node toNode = template.getNode(destination.getId());
+
+            WeightedPath path = GraphAlgoFactory
+                    .dijkstra(PathExpanders.forTypeAndDirection(RelationshipTypes.GOES_TO, Direction.OUTGOING), "cost")
+                    .findSinglePath(fromNode, toNode);
+
+            if (path != null) {
+                for (Relationship route : path.relationships()) {
+                    pathInfo.addStep((String) route.getStartNode().getProperty("name"));
+                }
+                pathInfo.addStep((String) path.lastRelationship().getEndNode().getProperty("name"));
+                pathInfo.setTotalCost(path.weight());
+            }
+        }
         return pathInfo;
     }
 
