@@ -3,12 +3,6 @@ package com.walmart.routeplanner.domain.services.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.neo4j.graphalgo.GraphAlgoFactory;
-import org.neo4j.graphalgo.WeightedPath;
-import org.neo4j.graphdb.Direction;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.PathExpanders;
-import org.neo4j.graphdb.Relationship;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.neo4j.support.Neo4jTemplate;
 import org.springframework.stereotype.Service;
@@ -16,9 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.walmart.routeplanner.domain.model.MapInfo;
 import com.walmart.routeplanner.domain.model.RouteInfo;
-import com.walmart.routeplanner.domain.model.ShortestPathInfo;
 import com.walmart.routeplanner.domain.model.entity.Point;
-import com.walmart.routeplanner.domain.model.entity.RelationshipTypes;
 import com.walmart.routeplanner.domain.repositories.PointRepository;
 import com.walmart.routeplanner.domain.services.MapService;
 
@@ -68,34 +60,6 @@ public class MapServiceImpl implements MapService {
             origin.goesTo(destination, route.getCost());
             pointRepository.save(origin);
         }
-    }
-
-    @Override
-    public ShortestPathInfo shortestPath(String mapName, String from, String to) {
-        ShortestPathInfo pathInfo = new ShortestPathInfo();
-
-        if (from.equals(to)) {
-            pathInfo.addStep(from);
-        } else {
-            Point origin = pointRepository.findByNameAndMap(from, mapName);
-            Point destination = pointRepository.findByNameAndMap(to, mapName);
-
-            Node fromNode = template.getNode(origin.getId());
-            Node toNode = template.getNode(destination.getId());
-
-            WeightedPath path = GraphAlgoFactory
-                    .dijkstra(PathExpanders.forTypeAndDirection(RelationshipTypes.GOES_TO, Direction.OUTGOING), "cost")
-                    .findSinglePath(fromNode, toNode);
-
-            if (path != null) {
-                for (Relationship route : path.relationships()) {
-                    pathInfo.addStep((String) route.getStartNode().getProperty("name"));
-                }
-                pathInfo.addStep((String) path.lastRelationship().getEndNode().getProperty("name"));
-                pathInfo.setTotalCost(path.weight());
-            }
-        }
-        return pathInfo;
     }
 
 }

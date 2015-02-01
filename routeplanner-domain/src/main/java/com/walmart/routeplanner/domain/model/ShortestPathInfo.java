@@ -29,16 +29,18 @@ public class ShortestPathInfo {
         return steps;
     }
 
-    public void addStep(String pointName) {
+    public ShortestPathInfo addStep(String pointName) {
         steps.add(pointName);
+        return this;
     }
 
     public Double getTotalCost() {
         return totalCost;
     }
 
-    public void setTotalCost(Double totalCost) {
+    public ShortestPathInfo setTotalCost(Double totalCost) {
         this.totalCost = totalCost;
+        return this;
     }
 
     /**
@@ -53,5 +55,15 @@ public class ShortestPathInfo {
     @Override
     public String toString() {
         return getPoints() + " " + getTotalCost();
+    }
+
+    public static ShortestPathInfo noPath() {
+        return new ShortestPathInfo();
+    }
+
+    public static ShortestPathInfo singlePoint(String pointName) {
+        return new ShortestPathInfo()
+                .addStep(pointName)
+                .setTotalCost(0d);
     }
 }
