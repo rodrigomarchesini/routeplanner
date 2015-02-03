@@ -13,6 +13,19 @@
 		<module>routeplanner-web</module>
 	</modules>
 	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>${commons-lang3.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-all</artifactId>
+				<version>${mockito.version}</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
 	</dependencyManagement>
 	<build>
 		<pluginManagement>
@@ -31,14 +44,10 @@
 	</build>
 	<dependencies>
 		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>${commons-lang3.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	<properties>
@@ -51,6 +60,7 @@
 		<javax-validation.version>1.0.0.GA</javax-validation.version>
 		<junit.version>4.12</junit.version>
 		<log4j.version>1.2.17</log4j.version>
+		<mockito.version>1.10.19</mockito.version>
 		<neo4j.version>2.0.1</neo4j.version>
 		<slf4j.version>1.7.10</slf4j.version>
 		<spring.version>3.2.8.RELEASE</spring.version>
