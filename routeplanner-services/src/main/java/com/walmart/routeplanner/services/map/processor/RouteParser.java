@@ -10,14 +10,14 @@ import com.walmart.routeplanner.services.map.processor.exception.MalformedMapExc
  *
  * @author Rodrigo Marchesini
  */
-public class MapRouteParser {
+public class RouteParser {
 
     private static final int LINE_TOKENS = 3;
     private static final int ORIGIN_INDEX = 0;
     private static final int DESTINATION_INDEX = 1;
     private static final int COST_INDEX = 2;
 
-    public MapRouteParser() {
+    public RouteParser() {
     }
 
     /**
@@ -28,14 +28,14 @@ public class MapRouteParser {
      * @param routeNumber Route index used for logging/error handling
      * @return Event composed by parsed route parts
      */
-    public MapRouteParsedEvent parseRoute(String route, int routeNumber) {
+    public RouteParsedEvent parseRoute(String route, int routeNumber) {
         String[] tokens = split(route, routeNumber);
 
         String origin = tokens[ORIGIN_INDEX];
         String destination = tokens[DESTINATION_INDEX];
         Integer cost = parseCostValue(routeNumber, tokens);
 
-        return new MapRouteParsedEvent(origin, destination, cost);
+        return new RouteParsedEvent(origin, destination, cost);
     }
 
     private Integer parseCostValue(int routeNumber, String[] tokens) {

@@ -18,25 +18,25 @@ import org.junit.runners.Parameterized.Parameters;
 @RunWith(Parameterized.class)
 public class MapRouterParserSuccessTest {
 
-    private MapRouteParser routeParser;
+    private RouteParser routeParser;
     private String routeString;
-    private MapRouteParsedEvent expectedParsedRoute;
+    private RouteParsedEvent expectedParsedRoute;
 
-    public MapRouterParserSuccessTest(String routeString, MapRouteParsedEvent parsedRoute) {
+    public MapRouterParserSuccessTest(String routeString, RouteParsedEvent parsedRoute) {
         this.routeString = routeString;
         expectedParsedRoute = parsedRoute;
     }
 
     @Before
     public void setUp() {
-        routeParser = new MapRouteParser();
+        routeParser = new RouteParser();
     }
 
     @Parameters
     public static Collection<Object[]> routes() {
         return Arrays.asList(new Object[][] {
-                { "A B 10", new MapRouteParsedEvent("A", "B", 10) },
-                { "B C 20 ", new MapRouteParsedEvent("B", "C", 20) }
+                { "A B 10", new RouteParsedEvent("A", "B", 10) },
+                { "B C 20 ", new RouteParsedEvent("B", "C", 20) }
         });
     }
 

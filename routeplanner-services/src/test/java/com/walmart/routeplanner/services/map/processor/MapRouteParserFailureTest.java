@@ -10,13 +10,13 @@ import com.walmart.routeplanner.services.map.processor.exception.MalformedMapExc
  *
  * @author Rodrigo Marchesini
  */
-public class MapRouterParserFailureTest {
+public class MapRouteParserFailureTest {
 
-    private MapRouteParser routeParser;
+    private RouteParser routeParser;
 
     @Before
     public void setUp() {
-        routeParser = new MapRouteParser();
+        routeParser = new RouteParser();
     }
 
     @Test(expected = MalformedMapException.class)

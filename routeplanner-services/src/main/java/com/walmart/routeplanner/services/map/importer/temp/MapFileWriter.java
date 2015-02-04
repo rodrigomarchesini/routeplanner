@@ -1,10 +1,13 @@
-package com.walmart.routeplanner.services.map.processor;
+package com.walmart.routeplanner.services.map.importer.temp;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Writer;
+
+import com.walmart.routeplanner.services.map.processor.RouteParsedEvent;
+import com.walmart.routeplanner.services.map.processor.RouteProcessor;
 
 /**
  * Utility class to write a map to a file,
@@ -12,7 +15,7 @@ import java.io.Writer;
  *
  * @author Rodrigo Marchesini
  */
-public class MapFileWriter implements MapProcessor {
+public class MapFileWriter implements RouteProcessor {
 
     private Writer writer;
     private File outputFile;
@@ -23,12 +26,12 @@ public class MapFileWriter implements MapProcessor {
 
     @Override
     public void before() throws IOException {
-        writer = new BufferedWriter(new FileWriter(outputFile));
+        writer = new BufferedWriter(new PrintWriter(outputFile));
     }
 
     @Override
-    public void processRoute(MapRouteParsedEvent event) throws IOException {
-        writer.write(event.toString());
+    public void processRoute(RouteParsedEvent event) throws IOException {
+        writer.write(event.toString() + "\n");
     }
 
     @Override

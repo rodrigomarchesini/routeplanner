@@ -1,5 +1,7 @@
-package com.walmart.routeplanner.services.map.processor;
+package com.walmart.routeplanner.services.map.importer.database;
 
+import com.walmart.routeplanner.services.map.processor.RouteParsedEvent;
+import com.walmart.routeplanner.services.map.processor.RouteProcessor;
 import com.walmart.routeplanner.services.utils.BufferList;
 
 /**
@@ -8,9 +10,9 @@ import com.walmart.routeplanner.services.utils.BufferList;
  *
  * @author Rodrigo Marchesini
  */
-public class MapDatabaseLoader implements MapProcessor {
+public class MapDatabaseLoader implements RouteProcessor {
     private Integer batchSize;
-    private BufferList<MapRouteParsedEvent> buffer;
+    private BufferList<RouteParsedEvent> buffer;
 
     /**
      * Creates a MapDatabaseLoader
@@ -27,11 +29,11 @@ public class MapDatabaseLoader implements MapProcessor {
 
     @Override
     public void before() {
-        buffer = new BufferList<MapRouteParsedEvent>(batchSize);
+        buffer = new BufferList<RouteParsedEvent>(batchSize);
     }
 
     @Override
-    public void processRoute(MapRouteParsedEvent event) {
+    public void processRoute(RouteParsedEvent event) {
         buffer.add(event);
         if (buffer.isFull()) {
             flush();
@@ -39,7 +41,7 @@ public class MapDatabaseLoader implements MapProcessor {
     }
 
     private void flush() {
-        for (MapRouteParsedEvent e : buffer) {
+        for (RouteParsedEvent e : buffer) {
             // TODO create transaction and persist
             System.out.println(e);
         }

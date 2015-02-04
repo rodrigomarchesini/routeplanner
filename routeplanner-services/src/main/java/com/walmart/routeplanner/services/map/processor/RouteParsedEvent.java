@@ -8,13 +8,13 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  *
  * @author Rodrigo Marchesini
  */
-public class MapRouteParsedEvent {
+public class RouteParsedEvent {
 
     private final String origin;
     private final String destination;
     private final Integer cost;
 
-    public MapRouteParsedEvent(String origin, String destination, Integer cost) {
+    public RouteParsedEvent(String origin, String destination, Integer cost) {
         this.origin = origin;
         this.destination = destination;
         this.cost = cost;
@@ -54,7 +54,7 @@ public class MapRouteParsedEvent {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        MapRouteParsedEvent other = (MapRouteParsedEvent) obj;
+        RouteParsedEvent other = (RouteParsedEvent) obj;
         return new EqualsBuilder()
                 .append(origin, other.origin)
                 .append(destination, other.destination)
