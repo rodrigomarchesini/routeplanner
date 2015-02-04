@@ -9,21 +9,31 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.walmart.routeplanner.services.map.importer.temp.MapTempImporterService;
+
 /**
  * Rest services to manage maps and calculate
  * cheapest routes between points.
  * 
  * @author Rodrigo Marchesini
  */
+@Component
 @Path("/map")
 public class MapRest {
+
+    @Autowired
+    private MapTempImporterService mapService;
 
     @PUT
     @Path("/{mapName}")
     public Response createOrReplaceMap(
             @PathParam("mapName") String mapName,
             InputStream inputStream) {
-        return Response.ok("mapName=" + mapName).build();
+        mapService.importMap(mapName, inputStream);
+        return Response.ok("Map saved. mapName=" + mapName).build();
     }
 
     @GET
