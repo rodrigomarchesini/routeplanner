@@ -20,7 +20,7 @@ import com.walmart.routeplanner.domain.services.RouteService;
  *
  * @author Rodrigo Marchesini
  */
-@ContextConfiguration(locations = "classpath:/spring-context.xml")
+@ContextConfiguration(locations = "classpath:/META-INF/spring-domain-context.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
 public class RouteServiceImplTest extends BaseMapTest {

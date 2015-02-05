@@ -18,7 +18,7 @@
     <context:annotation-config/>
     <context:component-scan base-package="com.walmart.routeplanner.domain" />
 
-    <neo4j:config storeDirectory="target/neo4j-db-routeplanner"
+    <neo4j:config storeDirectory="target/neo4j-db-routeplanner"  
                   base-package="com.walmart.routeplanner.domain.model.entity"/>
     <neo4j:repositories base-package="com.walmart.routeplanner.domain.repositories"/>
 

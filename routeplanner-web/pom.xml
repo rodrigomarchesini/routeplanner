@@ -17,6 +17,11 @@
 			<artifactId>routeplanner-services</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.walmart.routeplanner</groupId>
+			<artifactId>routeplanner-domain</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
@@ -26,6 +31,11 @@
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-spring</artifactId>
+			<version>${resteasy.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jackson-provider</artifactId>
 			<version>${resteasy.version}</version>
 		</dependency>
 		<dependency>

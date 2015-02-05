@@ -16,7 +16,7 @@ import com.walmart.routeplanner.domain.model.entity.Point;
  *
  * @author Rodrigo Marchesini
  */
-@ContextConfiguration(locations = "classpath:/spring-context.xml")
+@ContextConfiguration(locations = "classpath:/META-INF/spring-domain-context.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
 public class MapServiceImplTest extends BaseMapTest {

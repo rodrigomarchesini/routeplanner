@@ -28,7 +28,7 @@ public class RouteParser {
      * @param routeNumber Route index used for logging/error handling
      * @return Event composed by parsed route parts
      */
-    public RouteParsedEvent parseRoute(String route, int routeNumber) {
+    RouteParsedEvent parseRoute(String route, int routeNumber) {
         String[] tokens = split(route, routeNumber);
 
         String origin = tokens[ORIGIN_INDEX];
