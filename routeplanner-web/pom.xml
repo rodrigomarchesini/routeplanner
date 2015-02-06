@@ -19,7 +19,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.walmart.routeplanner</groupId>
-			<artifactId>routeplanner-domain</artifactId>
+			<artifactId>routeplanner-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
