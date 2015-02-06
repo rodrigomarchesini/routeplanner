@@ -3,9 +3,13 @@ package com.walmart.routeplanner.services.map.manager;
 import java.io.File;
 import java.io.InputStream;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
+import com.walmart.routeplanner.domain.services.MapService;
+import com.walmart.routeplanner.services.map.importer.database.MapDatabaseImporterServiceImpl;
 import com.walmart.routeplanner.services.map.importer.temp.MapFileWriter;
 import com.walmart.routeplanner.services.map.manager.exception.InvalidMapNameException;
 import com.walmart.routeplanner.services.map.processor.MapProcessor;
@@ -23,6 +27,12 @@ public class MapManagerServiceImpl implements MapManagerService {
 
     @Value("${map.tmpDir}")
     private String mapFilesDir;
+
+    @Autowired
+    private ThreadPoolTaskExecutor executor;
+
+    @Autowired
+    private MapService mapService;
 
     public MapManagerServiceImpl() {
     }
@@ -69,6 +79,6 @@ public class MapManagerServiceImpl implements MapManagerService {
     }
 
     private void scheduleDatabaseCreation(String mapName) {
-        // TODO schedule database creation
+        executor.execute(new MapDatabaseImporterServiceImpl(mapService, mapName, mapFilesDir));
     }
 }

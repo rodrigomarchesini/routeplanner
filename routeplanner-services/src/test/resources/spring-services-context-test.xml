@@ -11,6 +11,11 @@
 		http://www.springframework.org/schema/tx
 		http://www.springframework.org/schema/tx/spring-tx.xsd">
 
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+		name="propertiesBean">
+		<property name="location" value="classpath:/routeplanner.properties" />
+	</bean>
+
 	<import resource="classpath:META-INF/spring-domain-context.xml" />
 
     <context:annotation-config/>

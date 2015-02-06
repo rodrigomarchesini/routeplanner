@@ -3,6 +3,9 @@ package com.walmart.routeplanner.services.map.importer.temp;
 import java.io.File;
 import java.io.InputStream;
 
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.walmart.routeplanner.services.map.processor.MapProcessor;
@@ -17,30 +20,30 @@ import com.walmart.routeplanner.services.map.processor.RouteParser;
 @Service
 public class MapTempImporterServiceImpl implements MapTempImporterService {
 
-    //TODO parameterize
-    private static final String MAP_FILES_DIR = "./map-files/";
+    @Value("${map.tmpDir}")
+    private String mapFilesDir;
     
     public MapTempImporterServiceImpl() {
-        this.createDirIfNotExists();
     }
 
     @Override
     public void importMap(String mapName, InputStream in) {
-        //TODO concurrency control
-        File outputFile = new File(getMapFilesDir(), mapName + ".txt");
+        File outputFile = new File(mapFilesDir, mapName + ".txt");
         MapFileWriter mapFileWriter = new MapFileWriter(outputFile);
         MapProcessor importer = new MapProcessor(mapFileWriter, new RouteParser());
         importer.importMap(mapName, in);
     }
 
+    @PostConstruct
+    public void init() {
+        createDirIfNotExists();
+    }
+    
     private void createDirIfNotExists() {
-        File dir = new File(getMapFilesDir());
+        File dir = new File(mapFilesDir);
         if (!dir.exists()) {
             dir.mkdir();
         }
     }
 
-    protected String getMapFilesDir() {
-        return MAP_FILES_DIR;
-    }
 }

@@ -4,9 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.walmart.routeplanner.domain.model.entity.MapInfo;
@@ -20,16 +19,20 @@ import com.walmart.routeplanner.services.map.processor.exception.MissingMapFileE
  * 
  * @author Rodrigo Marchesini
  */
-@Service
-public class MapDatabaseImporterServiceImpl implements MapDatabaseImporterService {
+@Component
+@Scope("prototype")
+public class MapDatabaseImporterServiceImpl implements Runnable {
 
-    @Value("${map.tmpDir}")
     private String mapFilesDir;
 
-    @Autowired
     private MapService mapService;
 
-    public MapDatabaseImporterServiceImpl() {
+    private String mapName;
+
+    public MapDatabaseImporterServiceImpl(MapService mapService, String mapName, String baseDir) {
+        this.mapService = mapService;
+        this.mapName = mapName;
+        this.mapFilesDir = baseDir;
     }
 
     /*
@@ -38,10 +41,7 @@ public class MapDatabaseImporterServiceImpl implements MapDatabaseImporterServic
      * @see com.walmart.routeplanner.services.map.importer.database.
      * MapDatabaseImporterService#importMapToDatabase(java.lang.String)
      */
-    @Override
-    public void importMapToDatabase(String mapName) {
-        mapFilesDir = "./map-files-test";
-
+    public void importMapToDatabase() {
         File dir = new File(mapFilesDir);
         // TODO define pattern and ensure uniqueness
         File inputFile = new File(dir, mapName + ".txt");
@@ -63,11 +63,6 @@ public class MapDatabaseImporterServiceImpl implements MapDatabaseImporterServic
     }
 
     @Transactional
-    private void deleteMap() {
-
-    }
-
-    @Transactional
     private void createPoints(MapInfo mapInfo) {
         mapService.createPoints(mapInfo);
     }
@@ -84,5 +79,37 @@ public class MapDatabaseImporterServiceImpl implements MapDatabaseImporterServic
     @Transactional
     private void createSomeRoutes(MapInfo mapInfo, int fromIndex, int toIndex) {
         mapService.createRoutes(mapInfo, fromIndex, toIndex);
+    }
+
+    @Override
+    public void run() {
+        mapService.deleteAllRoutes(mapName);
+        mapService.deleteAllPoints(mapName);
+        importMapToDatabase();
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((mapName == null) ? 0 : mapName.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        MapDatabaseImporterServiceImpl other = (MapDatabaseImporterServiceImpl) obj;
+        if (mapName == null) {
+            if (other.mapName != null)
+                return false;
+        } else if (!mapName.equals(other.mapName))
+            return false;
+        return true;
     }
 }

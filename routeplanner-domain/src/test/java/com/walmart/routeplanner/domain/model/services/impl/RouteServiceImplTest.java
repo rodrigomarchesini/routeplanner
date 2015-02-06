@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.walmart.routeplanner.domain.model.PathInfo;
 import com.walmart.routeplanner.domain.model.entity.MapInfo;
-import com.walmart.routeplanner.domain.model.entity.Route;
 import com.walmart.routeplanner.domain.services.RouteService;
 
 /**

@@ -14,9 +14,11 @@ import javax.ws.rs.core.Response.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.walmart.routeplanner.domain.model.PathInfo;
 import com.walmart.routeplanner.services.map.importer.temp.MapTempImporterService;
 import com.walmart.routeplanner.services.map.manager.MapCreationResponse;
 import com.walmart.routeplanner.services.map.manager.MapManagerService;
+import com.walmart.routeplanner.services.map.path.PathService;
 
 /**
  * Rest services to manage maps and calculate
@@ -33,6 +35,9 @@ public class MapRest {
 
     @Autowired
     private MapManagerService mapManager;
+
+    @Autowired
+    private PathService pathService;
 
     @PUT
     @Path("/{mapName}")
@@ -55,15 +60,14 @@ public class MapRest {
     @GET
     @Path("/{mapName}")
     @Produces("application/json")
-    public Response cheapestRoute(
+    public PathInfo cheapestRoute(
             @PathParam("mapName") String mapName,
             @QueryParam("origin") String origin,
             @QueryParam("destination") String destination,
             @QueryParam("autonomy") Double autonomy,
             @QueryParam("fuelCost") Double fuelCost) {
         String format = "mapName=%s origin=%s destination=%s autonomy=%.2f fuelCost=%.2f";
-        return Response
-                .ok(String.format(format, mapName, origin, destination, autonomy, fuelCost))
-                .build();
+        //TODO calcular consumo - nao esquecer
+        return pathService.shortestPath(mapName, origin, destination);
     }
 }

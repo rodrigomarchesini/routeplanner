@@ -14,7 +14,7 @@ import com.walmart.routeplanner.services.map.processor.exception.MalformedMapExc
  *
  * @author Rodrigo Marchesini
  */
-@ContextConfiguration(locations = "classpath:/META-INF/spring-services-context.xml")
+@ContextConfiguration(locations = "classpath:/spring-services-context-test.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MapTempImporterServiceImplTest extends BaseMapProcessingTest {
 
