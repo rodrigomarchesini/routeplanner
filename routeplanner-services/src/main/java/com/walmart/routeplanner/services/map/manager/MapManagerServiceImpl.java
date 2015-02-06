@@ -47,8 +47,8 @@ public class MapManagerServiceImpl implements MapManagerService {
             return MapCreationResponse.ERROR_INVALID_MAP_NAME;
         }
 
-        if (!checkMapLock(mapName)) {
-            logger.info("Map is busy map={}", mapName);
+        if (!checkMapAlreadyQueued(mapName)) {
+            logger.info("Map is already in queue map={}", mapName);
             return MapCreationResponse.ERROR_BUSY;
         }
 
@@ -63,7 +63,7 @@ public class MapManagerServiceImpl implements MapManagerService {
                 && mapName.length() < MAP_NAME_MAXLENGTH);
     }
 
-    private boolean checkMapLock(String mapName) {
+    private boolean checkMapAlreadyQueued(String mapName) {
         return !executor.getThreadPoolExecutor().getQueue().contains(MapDatabaseImporter.from(mapName));
     }
 

@@ -64,13 +64,13 @@ public class MapRest {
                 return Response
                         .status(Status.BAD_REQUEST)
                         .type(MediaType.APPLICATION_JSON )
-                        .entity("Error: invalid map name.")
+                        .entity(GenericResponse.as("Error: invalid map name."))
                         .build();
             case ERROR_BUSY:
                 return Response
                         .status(Status.BAD_REQUEST)
                         .type(MediaType.APPLICATION_JSON )
-                        .entity("Error: map is already being imported.")
+                        .entity(GenericResponse.as("Error: map is already being imported."))
                         .build();
             default:
                 throw new AssertionError();
