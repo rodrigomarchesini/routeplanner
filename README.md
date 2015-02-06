@@ -2,7 +2,28 @@
 
 Author: Rodrigo Marchesini
 
-## Installation and running
+## Problem and solution
+
+### Problem
+The problem consists in finding the shortest path in weighted graphs. Maps have to be persisted and interfaces to create maps and find shortest path must be exposed as webservices.
+
+## Solution
+
+Implemented a Java Web application to manage maps and find paths storing data in a graph database.
+
+Three main components:
+* Core: responsible for dealing with graph database
+* Processor: responsible for dealing with map data, including map reading, parsing, validation, asynchronous creation in database and path retrieval.
+* Web: webservices to deal with maps and paths
+
+Main technologies:
+* Neo4j: graph database that offers good support and API for dealing with graphs. Provides easy way to set properties in edges/vertexes and to use them in queries/operations, besides out-of-the box algorithms to deal with graphs. In this particular case Dijkstra was used to get the shortest weighted path between two map points.
+* Spring: was chosen because offers good support and integration with Neo4j through Spring Data.
+* RestEasy: JAX-RS implementation used to build the rest webservices. These two simple webservices could be implemented in pure Java Servlet, but JAX-RS/RestEasy was chosen to speed up development, make it easier to deal with request/response parsing and exception handling.
+* Jackson: robust and well-known JSON parsing and generation library. There were few POJOs to map, with simple properties. No advanced configuration was necessary.
+
+Implementation strategies:
+TBD
 
 ### Prerequisistes
 * JDK 1.7+
@@ -38,6 +59,7 @@ A C 20
 C D 30
 B E 50
 D E 30"
+{"detail":"OK: Map will be imported."}
 ```
 
 ### Find path and cost
