@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import com.walmart.routeplanner.domain.services.MapService;
 import com.walmart.routeplanner.services.map.importer.database.MapDatabaseImporterServiceImpl;
 import com.walmart.routeplanner.services.map.importer.temp.MapFileWriter;
-import com.walmart.routeplanner.services.map.manager.exception.InvalidMapNameException;
 import com.walmart.routeplanner.services.map.processor.MapProcessor;
 import com.walmart.routeplanner.services.map.processor.RouteParser;
 import com.walmart.routeplanner.services.map.processor.RouteProcessor;
@@ -24,6 +23,8 @@ import com.walmart.routeplanner.services.map.processor.RouteProcessor;
  */
 @Service
 public class MapManagerServiceImpl implements MapManagerService {
+
+    private static final int MAP_NAME_MAXLENGTH = 40;
 
     @Value("${map.tmpDir}")
     private String mapFilesDir;
@@ -39,29 +40,31 @@ public class MapManagerServiceImpl implements MapManagerService {
 
     @Override
     public MapCreationResponse addMap(String mapName, InputStream in) {
-        validateName(mapName);
-        checkMapLock(mapName);
+        if (!validateName(mapName)) {
+            return MapCreationResponse.ERROR_INVALID_MAP_NAME;
+        }
+
+        if (!checkMapLock(mapName)) {
+            return MapCreationResponse.ERROR_BUSY;
+        }
+
         saveToTempFile(mapName, in);
         scheduleDatabaseCreation(mapName);
         return MapCreationResponse.OK_SCHEDULED;
     }
 
-    private void validateName(String mapName) {
-        // TODO define and create Pattern
-        if (mapName == null
-                || mapName.isEmpty()
-                || mapName.length() > 20) {
-            throw new InvalidMapNameException();
-        }
+    private boolean validateName(String mapName) {
+        return (mapName != null
+                && !mapName.isEmpty()
+                && mapName.length() < MAP_NAME_MAXLENGTH);
     }
 
-    private void checkMapLock(String mapName) {
-        // TODO avoid update while creating
+    private boolean checkMapLock(String mapName) {
+        return !executor.getThreadPoolExecutor().getQueue().contains(mapName);
     }
 
     private void saveToTempFile(String mapName, InputStream in) {
         File dir = createDirectoryIfNecessary();
-        // TODO define pattern and ensure uniqueness
         File outputFile = new File(dir, mapName + ".txt");
 
         RouteProcessor routeProcessor = new MapFileWriter(outputFile);

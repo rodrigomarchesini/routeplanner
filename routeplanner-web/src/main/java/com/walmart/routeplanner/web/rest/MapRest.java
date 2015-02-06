@@ -8,6 +8,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -15,10 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.walmart.routeplanner.domain.model.PathInfo;
+import com.walmart.routeplanner.domain.services.PointNotFoundException;
 import com.walmart.routeplanner.services.map.importer.temp.MapTempImporterService;
 import com.walmart.routeplanner.services.map.manager.MapCreationResponse;
 import com.walmart.routeplanner.services.map.manager.MapManagerService;
 import com.walmart.routeplanner.services.map.path.PathService;
+import com.walmart.routeplanner.web.model.GenericResponse;
 
 /**
  * Rest services to manage maps and calculate
@@ -40,6 +43,7 @@ public class MapRest {
     private PathService pathService;
 
     @PUT
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/{mapName}")
     public Response createOrReplaceMap(
             @PathParam("mapName") String mapName,
@@ -47,11 +51,21 @@ public class MapRest {
         MapCreationResponse response = mapManager.addMap(mapName, inputStream);
         switch (response) {
             case OK_SCHEDULED:
-                return Response.accepted("OK: scheduled creation").build();
+                return Response
+                        .ok(GenericResponse.as("OK: Map will be imported."), MediaType.APPLICATION_JSON)
+                        .build(); 
             case ERROR_INVALID_MAP_NAME:
-                return Response.status(Status.BAD_REQUEST).entity("invalid map name").build();
+                return Response
+                        .status(Status.BAD_REQUEST)
+                        .type(MediaType.APPLICATION_JSON )
+                        .entity("Error: invalid map name.")
+                        .build();
             case ERROR_BUSY:
-                return Response.status(Status.BAD_REQUEST).entity("map is busy").build();
+                return Response
+                        .status(Status.BAD_REQUEST)
+                        .type(MediaType.APPLICATION_JSON )
+                        .entity("Error: map is already being imported.")
+                        .build();
             default:
                 throw new AssertionError();
         }
@@ -59,13 +73,14 @@ public class MapRest {
 
     @GET
     @Path("/{mapName}")
-    @Produces("application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     public PathInfo cheapestRoute(
             @PathParam("mapName") String mapName,
             @QueryParam("origin") String origin,
             @QueryParam("destination") String destination,
             @QueryParam("autonomy") Double autonomy,
-            @QueryParam("fuelCost") Double fuelCost) {
+            @QueryParam("fuelCost") Double fuelCost)
+            throws PointNotFoundException {
         return pathService.shortestPath(mapName, origin, destination, autonomy, fuelCost);
     }
 }

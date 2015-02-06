@@ -43,7 +43,6 @@ public class MapDatabaseImporterServiceImpl implements Runnable {
      */
     public void importMapToDatabase() {
         File dir = new File(mapFilesDir);
-        // TODO define pattern and ensure uniqueness
         File inputFile = new File(dir, mapName + ".txt");
         FileInputStream fin;
         try {

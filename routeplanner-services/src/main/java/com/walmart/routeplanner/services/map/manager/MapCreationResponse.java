@@ -7,6 +7,6 @@ package com.walmart.routeplanner.services.map.manager;
 */
 public enum MapCreationResponse {
     OK_SCHEDULED,
-    ERROR_INVALID_MAP_NAME, //TODO exception?
+    ERROR_INVALID_MAP_NAME,
     ERROR_BUSY
 }

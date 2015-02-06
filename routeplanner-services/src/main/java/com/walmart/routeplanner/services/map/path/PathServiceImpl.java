@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.walmart.routeplanner.domain.model.PathInfo;
+import com.walmart.routeplanner.domain.services.PointNotFoundException;
 import com.walmart.routeplanner.domain.services.RouteService;
+import com.walmart.routeplanner.services.map.path.exception.InvalidInputException;
 
 /**
  * Implementation of PathService
@@ -21,7 +23,8 @@ public class PathServiceImpl implements PathService {
     }
 
     @Override
-    public PathInfo shortestPath(String mapName, String origin, String destination, Double autonomy, Double fuelCost) {
+    public PathInfo shortestPath(String mapName, String origin, String destination, Double autonomy, Double fuelCost) 
+            throws PointNotFoundException {
         checkValid(autonomy, "autonomy");
         checkValid(fuelCost, "fuelCost");
 
@@ -36,7 +39,7 @@ public class PathServiceImpl implements PathService {
 
     private void checkValid(Double input, String name) {
         if (input == null || input <= 0d) {
-            throw new IllegalArgumentException("Invalid " + name);
+            throw new InvalidInputException("Invalid " + name);
         }
     }
 }

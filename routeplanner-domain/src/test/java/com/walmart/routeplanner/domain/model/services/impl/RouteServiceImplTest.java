@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.walmart.routeplanner.domain.model.PathInfo;
 import com.walmart.routeplanner.domain.model.entity.MapInfo;
+import com.walmart.routeplanner.domain.services.PointNotFoundException;
 import com.walmart.routeplanner.domain.services.RouteService;
 
 /**
@@ -28,7 +29,7 @@ public class RouteServiceImplTest extends BaseMapTest {
     private RouteService routeService;
 
     @Test
-    public void shortestPathInSimpleMap() {
+    public void shortestPathInSimpleMap() throws PointNotFoundException {
         String mapName = "map1";
         MapInfo map = createSimpleMapInfo(mapName);
         createMap(map);
@@ -38,7 +39,7 @@ public class RouteServiceImplTest extends BaseMapTest {
     }
 
     @Test
-    public void shortestPathInSinglePointMap() {
+    public void shortestPathInSinglePointMap() throws PointNotFoundException {
         String mapName = "map1";
         MapInfo map = new MapInfo(mapName, Collections.singletonList(r(mapName, "A", "A", 10)));
         createMap(map);
@@ -48,7 +49,7 @@ public class RouteServiceImplTest extends BaseMapTest {
     }
 
     @Test
-    public void shortestPathSameOriginAndDestination() {
+    public void shortestPathSameOriginAndDestination() throws PointNotFoundException {
         String mapName = "map1";
         MapInfo map = new MapInfo(mapName, Collections.singletonList(r(mapName, "A", "A", 10)));
         createMap(map);
@@ -58,7 +59,7 @@ public class RouteServiceImplTest extends BaseMapTest {
     }
 
     @Test
-    public void shortestPathNotFoundInDisconnectedMap() {
+    public void shortestPathNotFoundInDisconnectedMap() throws PointNotFoundException {
         String mapName = "map1";
         MapInfo map = createDisconnectedMapInfo(mapName);
 
@@ -80,8 +81,8 @@ public class RouteServiceImplTest extends BaseMapTest {
             boolean shouldExist,
             Double expectedLength,
             String expectedPath) {
-        Assert.assertEquals(shouldExist, path.exists());
+        Assert.assertEquals(shouldExist, path.isPathExists());
         Assert.assertEquals(0, Double.compare(expectedLength, path.getLength()));
-        Assert.assertEquals(expectedPath, path.getPoints());
+        Assert.assertEquals(expectedPath, path.getPointsAsLineString());
     }
 }

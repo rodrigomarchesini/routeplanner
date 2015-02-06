@@ -16,8 +16,14 @@ import com.walmart.routeplanner.domain.model.entity.Point;
 import com.walmart.routeplanner.domain.model.entity.RelationshipTypes;
 import com.walmart.routeplanner.domain.model.entity.Route;
 import com.walmart.routeplanner.domain.repositories.PointRepository;
+import com.walmart.routeplanner.domain.services.PointNotFoundException;
 import com.walmart.routeplanner.domain.services.RouteService;
 
+/**
+ * Implementation of RouteService.
+ * 
+ * @author Rodrigo Marchesini
+ */
 @Service
 public class RouteServiceImpl implements RouteService {
     @Autowired
@@ -28,13 +34,14 @@ public class RouteServiceImpl implements RouteService {
 
     @Transactional
     @Override
-    public PathInfo shortestPath(String mapName, String from, String to) {
+    public PathInfo shortestPath(String mapName, String from, String to)
+            throws PointNotFoundException {
+        Node fromNode = findNodeByPointNameAndMap(from, mapName);
+        Node toNode = findNodeByPointNameAndMap(to, mapName);
+
         if (from.equals(to)) {
             return PathInfo.singlePoint(from);
         }
-
-        Node fromNode = findNodeByPointNameAndMap(from, mapName);
-        Node toNode = findNodeByPointNameAndMap(to, mapName);
 
         WeightedPath path = dijkstra(fromNode, toNode);
         if (path == null) {
@@ -64,9 +71,14 @@ public class RouteServiceImpl implements RouteService {
         return (String) node.getProperty("name");
     }
 
-    private Node findNodeByPointNameAndMap(String pointName, String mapName) {
-        // TODO handle point not found
+    private Node findNodeByPointNameAndMap(String pointName, String mapName) 
+            throws PointNotFoundException {
         Point point = pointRepository.findByNameAndMap(pointName, mapName);
+        if (point == null) {
+            throw new PointNotFoundException("Point not found: " +
+                    "name=" + pointName + 
+                    " map=" + mapName);
+        }
         return template.getNode(point.getId());
     }
 }

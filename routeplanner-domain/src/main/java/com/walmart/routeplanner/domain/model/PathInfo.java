@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  * Shortest path data, composed by a sequence of steps
@@ -23,11 +24,7 @@ public class PathInfo {
         cost = 0d;
     }
 
-    public boolean exists() {
-        return getSteps().size() > 0;
-    }
-
-    private List<String> getSteps() {
+    public List<String> getPoints() {
         return steps;
     }
 
@@ -54,18 +51,23 @@ public class PathInfo {
         return this;
     }
 
+    public boolean isPathExists() {
+        return !this.steps.isEmpty();
+    }
+
     /**
      * String representation of the path in the form "A B C D".
      *
      * @return Route points separated by space
      */
-    public String getPoints() {
+    @JsonIgnore
+    public String getPointsAsLineString() {
         return StringUtils.join(steps, " ");
     }
 
     @Override
     public String toString() {
-        return getPoints() + " " + getLength();
+        return getPointsAsLineString() + " " + getLength();
     }
 
     public static PathInfo noPath() {
