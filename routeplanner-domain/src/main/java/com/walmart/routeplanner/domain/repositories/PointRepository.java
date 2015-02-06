@@ -26,13 +26,11 @@ public interface PointRepository extends GraphRepository<Point> {
             "RETURN p")
     Point findByNameAndMap(String name, String mapName);
 
-    /**
-     * Delete all points and routes labeled as {@code mapName}.
-     *
-     * @param mapName Map's name
-     */
-    @Query(value = "MATCH (p:Point {mapName: {0}}) OPTIONAL MATCH (p)-[r]-() DELETE p,r")
-    void deleteAllPointsAndRoutesByMap(String mapName);
+    @Query(value = "MATCH (p:Point {mapName: {0}}) OPTIONAL MATCH (p)-[r]-() DELETE r")
+    void deleteAllRoutesByMap(String mapName);
+
+    @Query(value = "MATCH (p:Point {mapName: {0}}) DELETE p")
+    void deleteAllPointsByMap(String mapName);
 
     /**
      * Retrieve the quantity of points grouped by the map.

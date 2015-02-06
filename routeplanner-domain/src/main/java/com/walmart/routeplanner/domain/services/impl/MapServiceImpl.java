@@ -30,12 +30,6 @@ public class MapServiceImpl implements MapService {
     @Autowired
     private PointRepository pointRepository;
 
-    @Transactional
-    @Override
-    public void deleteMap(String mapName) {
-        pointRepository.deleteAllPointsAndRoutesByMap(mapName);
-    }
-
     /*
      * (non-Javadoc)
      * @see com.walmart.routeplanner.domain.services.MapService#createPoints(com.walmart.routeplanner.domain.model.entity.MapInfo)
@@ -92,6 +86,18 @@ public class MapServiceImpl implements MapService {
             // origin.goesTo(destination, route.getCost());
             // this.template.save(origin);
         }
+    }
+
+    @Transactional
+    @Override
+    public void deleteAllPoints(String mapName) {
+        pointRepository.deleteAllPointsByMap(mapName);
+    }
+
+    @Transactional
+    @Override
+    public void deleteAllRoutes(String mapName) {
+        pointRepository.deleteAllRoutesByMap(mapName);        
     }
 
 }

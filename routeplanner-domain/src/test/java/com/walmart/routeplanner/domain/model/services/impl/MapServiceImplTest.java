@@ -35,7 +35,8 @@ public class MapServiceImplTest extends BaseMapTest {
         Assert.assertEquals(map1.buildPointsSet().size(), pointRepository.countPointsByMap(mapName1));
         Assert.assertEquals(map2.buildPointsSet().size(), pointRepository.countPointsByMap(mapName2));
 
-        mapService.deleteMap(mapName1);
+        mapService.deleteAllRoutes(mapName1);
+        mapService.deleteAllPoints(mapName1);
 
         Assert.assertEquals(0, pointRepository.countPointsByMap(mapName1));
         Assert.assertEquals(map2.buildPointsSet().size(), pointRepository.countPointsByMap(mapName2));
