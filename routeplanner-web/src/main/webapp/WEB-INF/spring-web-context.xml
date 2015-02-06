@@ -16,7 +16,7 @@
 		<property name="location" value="classpath:/routeplanner.properties" />
 	</bean>
 	
-	<import resource="classpath:META-INF/spring-services-context.xml" />
+	<import resource="classpath:META-INF/spring-processor-context.xml" />
 
 	<context:component-scan base-package="com.walmart.routeplanner.web">
 		<context:include-filter expression="javax.ws.rs.ext.Provider" type="annotation"/>

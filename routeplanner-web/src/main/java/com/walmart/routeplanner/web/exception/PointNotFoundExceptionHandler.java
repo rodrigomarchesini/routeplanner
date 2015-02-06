@@ -7,7 +7,7 @@ import javax.ws.rs.ext.Provider;
 
 import org.springframework.stereotype.Component;
 
-import com.walmart.routeplanner.domain.services.PointNotFoundException;
+import com.walmart.routeplanner.core.services.PointNotFoundException;
 import com.walmart.routeplanner.web.model.GenericResponse;
 
 /**

@@ -14,7 +14,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.walmart.routeplanner</groupId>
-			<artifactId>routeplanner-services</artifactId>
+			<artifactId>routeplanner-processor</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

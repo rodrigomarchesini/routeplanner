@@ -8,8 +8,8 @@
 	<packaging>pom</packaging>
 	<name>RoutePlanner</name>
 	<modules>
-		<module>routeplanner-domain</module>
-		<module>routeplanner-services</module>
+		<module>routeplanner-core</module>
+		<module>routeplanner-processor</module>
 		<module>routeplanner-web</module>
 	</modules>
 	<dependencyManagement>

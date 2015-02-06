@@ -17,12 +17,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.walmart.routeplanner.domain.model.PathInfo;
-import com.walmart.routeplanner.domain.services.PointNotFoundException;
-import com.walmart.routeplanner.services.map.importer.temp.MapTempImporterService;
-import com.walmart.routeplanner.services.map.manager.MapCreationResponse;
-import com.walmart.routeplanner.services.map.manager.MapManagerService;
-import com.walmart.routeplanner.services.map.path.PathService;
+import com.walmart.routeplanner.core.model.PathInfo;
+import com.walmart.routeplanner.core.services.PointNotFoundException;
+import com.walmart.routeplanner.processor.map.importer.temp.MapTempImporterService;
+import com.walmart.routeplanner.processor.map.manager.MapCreationResponse;
+import com.walmart.routeplanner.processor.map.manager.MapManagerService;
+import com.walmart.routeplanner.processor.map.path.PathService;
 import com.walmart.routeplanner.web.model.GenericResponse;
 
 /**

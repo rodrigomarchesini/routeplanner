@@ -7,7 +7,7 @@ import javax.ws.rs.ext.Provider;
 
 import org.springframework.stereotype.Component;
 
-import com.walmart.routeplanner.services.map.processor.exception.MapProcessingException;
+import com.walmart.routeplanner.processor.map.processing.exception.MapProcessingException;
 import com.walmart.routeplanner.web.model.GenericResponse;
 
 /**

@@ -7,7 +7,7 @@ import javax.ws.rs.ext.Provider;
 
 import org.springframework.stereotype.Component;
 
-import com.walmart.routeplanner.services.map.path.exception.InvalidInputException;
+import com.walmart.routeplanner.processor.map.path.exception.InvalidInputException;
 import com.walmart.routeplanner.web.model.GenericResponse;
 
 /**
