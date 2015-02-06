@@ -66,8 +66,6 @@ public class MapRest {
             @QueryParam("destination") String destination,
             @QueryParam("autonomy") Double autonomy,
             @QueryParam("fuelCost") Double fuelCost) {
-        String format = "mapName=%s origin=%s destination=%s autonomy=%.2f fuelCost=%.2f";
-        //TODO calcular consumo - nao esquecer
-        return pathService.shortestPath(mapName, origin, destination);
+        return pathService.shortestPath(mapName, origin, destination, autonomy, fuelCost);
     }
 }

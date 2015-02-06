@@ -78,10 +78,10 @@ public class RouteServiceImplTest extends BaseMapTest {
     private void assertShortestPath(
             PathInfo path,
             boolean shouldExist,
-            Double expectedCost,
+            Double expectedLength,
             String expectedPath) {
         Assert.assertEquals(shouldExist, path.exists());
-        Assert.assertEquals(0, Double.compare(expectedCost, path.getCost()));
+        Assert.assertEquals(0, Double.compare(expectedLength, path.getLength()));
         Assert.assertEquals(expectedPath, path.getPoints());
     }
 }

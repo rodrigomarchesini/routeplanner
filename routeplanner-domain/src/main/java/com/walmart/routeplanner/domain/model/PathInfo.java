@@ -7,17 +7,19 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * Shortest path data, composed by a sequence of steps
- * between points and a total cost.
+ * between points and a total length.
  *
  * @author Rodrigo Marchesini
  */
 public class PathInfo {
 
+    private Double length;
     private Double cost;
     private List<String> steps;
 
     public PathInfo() {
         steps = new ArrayList<String>();
+        length = 0d;
         cost = 0d;
     }
 
@@ -31,6 +33,15 @@ public class PathInfo {
 
     public PathInfo addStep(String pointName) {
         steps.add(pointName);
+        return this;
+    }
+
+    public Double getLength() {
+        return length;
+    }
+
+    public PathInfo setLength(Double length) {
+        this.length = length;
         return this;
     }
 
@@ -54,7 +65,7 @@ public class PathInfo {
 
     @Override
     public String toString() {
-        return getPoints() + " " + getCost();
+        return getPoints() + " " + getLength();
     }
 
     public static PathInfo noPath() {
@@ -64,6 +75,6 @@ public class PathInfo {
     public static PathInfo singlePoint(String pointName) {
         return new PathInfo()
                 .addStep(pointName)
-                .setCost(0d);
+                .setLength(0d);
     }
 }

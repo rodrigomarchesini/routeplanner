@@ -21,8 +21,22 @@ public class PathServiceImpl implements PathService {
     }
 
     @Override
-    public PathInfo shortestPath(String mapName, String origin, String destination) {
-        return routeService.shortestPath(mapName, origin, destination);
+    public PathInfo shortestPath(String mapName, String origin, String destination, Double autonomy, Double fuelCost) {
+        checkValid(autonomy, "autonomy");
+        checkValid(fuelCost, "fuelCost");
+
+        PathInfo path = routeService.shortestPath(mapName, origin, destination);
+        path.setCost(calculateCost(path, autonomy, fuelCost));
+        return path;
     }
 
+    private Double calculateCost(PathInfo path, Double autonomy, Double fuelCost) {
+        return path.getLength() * fuelCost / autonomy;
+    }
+
+    private void checkValid(Double input, String name) {
+        if (input == null || input <= 0d) {
+            throw new IllegalArgumentException("Invalid " + name);
+        }
+    }
 }

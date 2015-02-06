@@ -49,7 +49,7 @@ public class RouteServiceImpl implements RouteService {
             pathInfo.addStep(getPointName(route.getStartNode()));
         }
         pathInfo.addStep(getPointName(path.lastRelationship().getEndNode()));
-        pathInfo.setCost(path.weight());
+        pathInfo.setLength(path.weight());
         return pathInfo;
     }
 

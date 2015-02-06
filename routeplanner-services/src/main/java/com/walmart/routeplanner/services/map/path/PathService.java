@@ -9,5 +9,5 @@ import com.walmart.routeplanner.domain.model.PathInfo;
  */
 public interface PathService {
 
-    PathInfo shortestPath(String mapName, String origin, String destination);
+    PathInfo shortestPath(String mapName, String origin, String destination, Double autonomy, Double fuelCost);
 }
