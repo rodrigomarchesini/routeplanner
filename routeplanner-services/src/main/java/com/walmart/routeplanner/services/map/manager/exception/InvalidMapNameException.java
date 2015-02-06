@@ -1,4 +1,4 @@
-package com.walmart.routeplanner.services.map.manager;
+package com.walmart.routeplanner.services.map.manager.exception;
 
 /**
 * Thrown to indicate that the name of the map is not valid.

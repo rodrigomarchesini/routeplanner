@@ -14,28 +14,30 @@ import org.springframework.data.neo4j.annotation.StartNode;
 @RelationshipEntity(type = "GOES_TO")
 public class Route {
 
+    public static final String PROP_COST = "cost";
+
     @GraphId
     private Long id;
 
     @StartNode
-    private Point start;
+    private Point origin;
 
     @EndNode
-    private Point end;
+    private Point destination;
 
-    private Double cost;
+    private Integer cost;
 
     public Route() {
     }
 
     /**
-     * @param start Origin point
-     * @param end Destination point
+     * @param origin Origin point
+     * @param destination Destination point
      * @param cost Cost of the route
      */
-    public Route(Point start, Point end, Double cost) {
-        this.start = start;
-        this.end = end;
+    public Route(Point origin, Point destination, Integer cost) {
+        this.origin = origin;
+        this.destination = destination;
         this.cost = cost;
     }
 
@@ -43,24 +45,48 @@ public class Route {
         return id;
     }
 
-    public Point getStart() {
-        return start;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Point getEnd() {
-        return end;
+    public Point getOrigin() {
+        return origin;
     }
 
-    public Double getCost() {
+    public void setOrigin(Point origin) {
+        this.origin = origin;
+    }
+
+    public Point getDestination() {
+        return destination;
+    }
+
+    public void setDestination(Point destination) {
+        this.destination = destination;
+    }
+
+    public Integer getCost() {
         return cost;
     }
+    
+    public void setCost(Integer cost) {
+        this.cost = cost;
+    }
 
+    public static Route of(Point origin, Point destination, Integer cost) {
+        return new Route(origin, destination, cost);
+    }
+
+    public String toStringLine() {
+        return origin.getName() + " " + destination.getName() + " " + cost;
+    }
+    
     @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .append("id", id)
-                .append("start", start)
-                .append("end", end)
+                .append("origin", origin)
+                .append("destination", destination)
                 .append("cost", cost)
                 .toString();
     }

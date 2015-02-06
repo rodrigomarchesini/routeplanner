@@ -10,6 +10,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import com.walmart.routeplanner.domain.model.entity.Point;
+import com.walmart.routeplanner.domain.model.entity.Route;
+
 /**
  * Success test scenarios for MapRouterParser.
  *
@@ -20,9 +23,9 @@ public class MapRouterParserSuccessTest {
 
     private RouteParser routeParser;
     private String routeString;
-    private RouteParsedEvent expectedParsedRoute;
+    private Route expectedParsedRoute;
 
-    public MapRouterParserSuccessTest(String routeString, RouteParsedEvent parsedRoute) {
+    public MapRouterParserSuccessTest(String routeString, Route parsedRoute) {
         this.routeString = routeString;
         expectedParsedRoute = parsedRoute;
     }
@@ -35,14 +38,14 @@ public class MapRouterParserSuccessTest {
     @Parameters
     public static Collection<Object[]> routes() {
         return Arrays.asList(new Object[][] {
-                { "A B 10", new RouteParsedEvent("A", "B", 10) },
-                { "B C 20 ", new RouteParsedEvent("B", "C", 20) }
+                { "A B 10", new Route(new Point("A", ""), new Point("B", ""), 10) },
+                { "B C 20 ", new Route(new Point("B", ""), new Point("C", ""), 20) }
         });
     }
 
     @Test
     public void testParseRoutes() {
-        Assert.assertEquals(expectedParsedRoute, routeParser.parseRoute(routeString, 1));
+        Assert.assertEquals(expectedParsedRoute.toStringLine(), routeParser.parseRoute(routeString, 1).toStringLine());
     }
 
 }

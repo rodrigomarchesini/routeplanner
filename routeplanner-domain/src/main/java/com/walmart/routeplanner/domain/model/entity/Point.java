@@ -1,14 +1,10 @@
 package com.walmart.routeplanner.domain.model.entity;
 
-import java.util.Set;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.neo4j.graphdb.Direction;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.neo4j.annotation.GraphId;
 import org.springframework.data.neo4j.annotation.Indexed;
 import org.springframework.data.neo4j.annotation.NodeEntity;
-import org.springframework.data.neo4j.annotation.RelatedToVia;
 
 /**
  * Representation of a map point.
@@ -22,14 +18,10 @@ public class Point {
     @GraphId
     private Long id;
 
-    @Indexed
     private String name;
 
     @Indexed
     private String mapName;
-
-    @RelatedToVia(type = "GOES_TO", direction = Direction.OUTGOING)
-    private Set<Route> routes;
 
     public Point() {
     }
@@ -55,18 +47,6 @@ public class Point {
 
     public String getMapName() {
         return mapName;
-    }
-
-    /**
-     * Creates a route from this {@code Point} to {@code destination}.
-     *
-     * @param destination
-     *            Destination point
-     * @param cost
-     *            Associated cost
-     */
-    public void goesTo(Point destination, Double cost) {
-        routes.add(new Route(this, destination, cost));
     }
 
     @Override

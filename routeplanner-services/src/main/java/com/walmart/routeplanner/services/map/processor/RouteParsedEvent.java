@@ -1,20 +1,30 @@
 package com.walmart.routeplanner.services.map.processor;
 
+import java.io.Serializable;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
- * Data holder for a parsed route of a map.
+ * Route data, composed by origin and destination points
+ * and a cost destination traverse it.
  *
  * @author Rodrigo Marchesini
  */
-public class RouteParsedEvent {
+class RouteParsedEvent implements Serializable {
+    private static final long serialVersionUID = -5760830175224329963L;
 
     private final String origin;
     private final String destination;
     private final Integer cost;
 
-    public RouteParsedEvent(String origin, String destination, Integer cost) {
+    /**
+     * @param origin origin
+     * @param destination destination
+     * @param cost cost
+     */
+    RouteParsedEvent(String origin, String destination, Integer cost) {
         this.origin = origin;
         this.destination = destination;
         this.cost = cost;
@@ -32,9 +42,21 @@ public class RouteParsedEvent {
         return cost;
     }
 
+    public static RouteParsedEvent of(String from, String to, Integer cost) {
+        return new RouteParsedEvent(from, to, cost);
+    }
+
+    public String toStringLine() {
+        return origin + " " + destination + " " + cost;
+    }
+    
     @Override
     public String toString() {
-        return origin + " " + destination + " " + cost;
+        return new ToStringBuilder(this)
+                .append("origin", origin)
+                .append("destination", destination)
+                .append("cost", cost)
+                .toString();
     }
 
     @Override
@@ -56,9 +78,9 @@ public class RouteParsedEvent {
             return false;
         RouteParsedEvent other = (RouteParsedEvent) obj;
         return new EqualsBuilder()
-                .append(origin, other.origin)
-                .append(destination, other.destination)
-                .append(cost, other.cost)
+                .append(this.origin, other.getOrigin())
+                .append(this.destination, other.getDestination())
+                .append(this.cost, other.getCost())
                 .isEquals();
     }
 

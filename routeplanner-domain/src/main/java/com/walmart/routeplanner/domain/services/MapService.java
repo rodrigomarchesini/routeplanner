@@ -1,6 +1,6 @@
 package com.walmart.routeplanner.domain.services;
 
-import com.walmart.routeplanner.domain.model.MapInfo;
+import com.walmart.routeplanner.domain.model.entity.MapInfo;
 
 /**
  * Service interface to deal with Map's managing.
@@ -8,8 +8,6 @@ import com.walmart.routeplanner.domain.model.MapInfo;
  * @author Rodrigo Marchesini
  */
 public interface MapService {
-
-    // TODO createOrReplaceMap?
 
     /**
      * Deletes a map, removing all points and routes.
@@ -19,10 +17,20 @@ public interface MapService {
     void deleteMap(String mapName);
 
     /**
-     * Creates the map represented by the {@code MapInfo}.
-     *
-     * @param map Map's points and routes
+     * Insert a range of routes into database.
+     * Route points must exist.
+     * @param map Map data
+     * @param fromIndex Begin of interval (inclusive)
+     * @param toIndex End of internval (exclusive)
      */
-    void createMap(MapInfo map);
+    void createRoutes(MapInfo map, int fromIndex, int toIndex);
+
+    /**
+     * Insert all points into database.
+     * Duplicated points are discarded (verified by name).
+     * Point's IDs are updated after database insertion.
+     * @param map Map data
+     */
+    void createPoints(MapInfo map);
 
 }

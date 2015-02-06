@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
 
-import com.walmart.routeplanner.services.map.processor.RouteParsedEvent;
+import com.walmart.routeplanner.domain.model.entity.Route;
 import com.walmart.routeplanner.services.map.processor.RouteProcessor;
 
 /**
@@ -30,8 +30,8 @@ public class MapFileWriter implements RouteProcessor {
     }
 
     @Override
-    public void processRoute(RouteParsedEvent event) throws IOException {
-        writer.write(event.toString() + "\n");
+    public void processRoute(Route event) throws IOException {
+        writer.write(event.toStringLine() + "\n");
     }
 
     @Override

@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import com.walmart.routeplanner.domain.model.entity.Point;
+import com.walmart.routeplanner.domain.model.entity.Route;
 import com.walmart.routeplanner.services.map.processor.exception.MapProcessingException;
 
 /**
@@ -43,7 +45,7 @@ public class MapProcessor {
                 InputStreamReader isr = new InputStreamReader(in);
                 BufferedReader reader = new BufferedReader(isr)) {
             routeProcessor.before();
-            parseMap(reader);
+            parseMap(mapName, reader);
         } catch (IOException e) {
             throw new MapProcessingException("Error processing map " + mapName, e);
         } finally {
@@ -55,12 +57,16 @@ public class MapProcessor {
         }
     }
 
-    private void parseMap(BufferedReader reader) throws IOException {
+    private void parseMap(String mapName, BufferedReader reader) throws IOException {
         String routeAsString;
         int routeCount = 0;
         while ((routeAsString = reader.readLine()) != null) {
             routeCount++;
-            routeProcessor.processRoute(routeParser.parseRoute(routeAsString, routeCount));
+            RouteParsedEvent info = routeParser.parseRoute(routeAsString, routeCount);
+            routeProcessor.processRoute(new Route(
+                    new Point(info.getOrigin(), mapName),
+                    new Point(info.getDestination(), mapName),
+                    info.getCost()));
         }
     }
 }

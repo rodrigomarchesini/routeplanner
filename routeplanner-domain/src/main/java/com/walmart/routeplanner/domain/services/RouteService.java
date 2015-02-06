@@ -1,6 +1,6 @@
 package com.walmart.routeplanner.domain.services;
 
-import com.walmart.routeplanner.domain.model.ShortestPathInfo;
+import com.walmart.routeplanner.domain.model.PathInfo;
 
 public interface RouteService {
     /**
@@ -12,5 +12,5 @@ public interface RouteService {
      * @param to Destination
      * @return
      */
-    ShortestPathInfo shortestPath(String mapName, String from, String to);
+    PathInfo shortestPath(String mapName, String from, String to);
 }

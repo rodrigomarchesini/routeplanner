@@ -2,6 +2,8 @@ package com.walmart.routeplanner.services.map.processor;
 
 import java.io.IOException;
 
+import com.walmart.routeplanner.domain.model.entity.Route;
+
 /**
  * Event handler to process a map, route by route.
  *
@@ -22,7 +24,7 @@ public interface RouteProcessor {
      * @param event Holder for line data
      * @throws IOException thrown if any error occurs
      */
-    void processRoute(RouteParsedEvent event) throws IOException;
+    void processRoute(Route event) throws IOException;
 
     /**
      * Fired after reading, allowing resources to be closed.

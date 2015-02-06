@@ -11,14 +11,14 @@ import org.apache.commons.lang3.StringUtils;
  *
  * @author Rodrigo Marchesini
  */
-public class ShortestPathInfo {
+public class PathInfo {
 
-    private Double totalCost;
+    private Double cost;
     private List<String> steps;
 
-    public ShortestPathInfo() {
+    public PathInfo() {
         steps = new ArrayList<String>();
-        totalCost = 0d;
+        cost = 0d;
     }
 
     public boolean exists() {
@@ -29,17 +29,17 @@ public class ShortestPathInfo {
         return steps;
     }
 
-    public ShortestPathInfo addStep(String pointName) {
+    public PathInfo addStep(String pointName) {
         steps.add(pointName);
         return this;
     }
 
-    public Double getTotalCost() {
-        return totalCost;
+    public Double getCost() {
+        return cost;
     }
 
-    public ShortestPathInfo setTotalCost(Double totalCost) {
-        this.totalCost = totalCost;
+    public PathInfo setCost(Double cost) {
+        this.cost = cost;
         return this;
     }
 
@@ -54,16 +54,16 @@ public class ShortestPathInfo {
 
     @Override
     public String toString() {
-        return getPoints() + " " + getTotalCost();
+        return getPoints() + " " + getCost();
     }
 
-    public static ShortestPathInfo noPath() {
-        return new ShortestPathInfo();
+    public static PathInfo noPath() {
+        return new PathInfo();
     }
 
-    public static ShortestPathInfo singlePoint(String pointName) {
-        return new ShortestPathInfo()
+    public static PathInfo singlePoint(String pointName) {
+        return new PathInfo()
                 .addStep(pointName)
-                .setTotalCost(0d);
+                .setCost(0d);
     }
 }

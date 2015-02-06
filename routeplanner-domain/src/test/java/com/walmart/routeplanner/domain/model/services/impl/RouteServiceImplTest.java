@@ -10,9 +10,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.walmart.routeplanner.domain.model.MapInfo;
-import com.walmart.routeplanner.domain.model.RouteInfo;
-import com.walmart.routeplanner.domain.model.ShortestPathInfo;
+import com.walmart.routeplanner.domain.model.PathInfo;
+import com.walmart.routeplanner.domain.model.entity.MapInfo;
+import com.walmart.routeplanner.domain.model.entity.Route;
 import com.walmart.routeplanner.domain.services.RouteService;
 
 /**
@@ -32,29 +32,29 @@ public class RouteServiceImplTest extends BaseMapTest {
     public void shortestPathInSimpleMap() {
         String mapName = "map1";
         MapInfo map = createSimpleMapInfo(mapName);
-        mapService.createMap(map);
+        createMap(map);
 
-        ShortestPathInfo path = routeService.shortestPath(mapName, "A", "D");
+        PathInfo path = routeService.shortestPath(mapName, "A", "D");
         assertShortestPath(path, true, 25d, "A B D");
     }
 
     @Test
     public void shortestPathInSinglePointMap() {
         String mapName = "map1";
-        MapInfo map = new MapInfo(mapName, Collections.singletonList(RouteInfo.of("A", "A", 10d)));
-        mapService.createMap(map);
+        MapInfo map = new MapInfo(mapName, Collections.singletonList(r(mapName, "A", "A", 10)));
+        createMap(map);
 
-        ShortestPathInfo path = routeService.shortestPath(mapName, "A", "A");
+        PathInfo path = routeService.shortestPath(mapName, "A", "A");
         assertShortestPath(path, true, 0d, "A");
     }
 
     @Test
     public void shortestPathSameOriginAndDestination() {
         String mapName = "map1";
-        MapInfo map = new MapInfo(mapName, Collections.singletonList(RouteInfo.of("A", "A", 10d)));
-        mapService.createMap(map);
+        MapInfo map = new MapInfo(mapName, Collections.singletonList(r(mapName, "A", "A", 10)));
+        createMap(map);
 
-        ShortestPathInfo path = routeService.shortestPath(mapName, "A", "A");
+        PathInfo path = routeService.shortestPath(mapName, "A", "A");
         assertShortestPath(path, true, 0d, "A");
     }
 
@@ -63,8 +63,8 @@ public class RouteServiceImplTest extends BaseMapTest {
         String mapName = "map1";
         MapInfo map = createDisconnectedMapInfo(mapName);
 
-        mapService.createMap(map);
-        ShortestPathInfo path;
+        createMap(map);
+        PathInfo path;
 
         path = routeService.shortestPath(mapName, "A", "B");
         assertShortestPath(path, false, 0d, "");
@@ -77,12 +77,12 @@ public class RouteServiceImplTest extends BaseMapTest {
     }
 
     private void assertShortestPath(
-            ShortestPathInfo path,
+            PathInfo path,
             boolean shouldExist,
             Double expectedCost,
             String expectedPath) {
         Assert.assertEquals(shouldExist, path.exists());
-        Assert.assertEquals(0, Double.compare(expectedCost, path.getTotalCost()));
+        Assert.assertEquals(0, Double.compare(expectedCost, path.getCost()));
         Assert.assertEquals(expectedPath, path.getPoints());
     }
 }
