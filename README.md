@@ -89,3 +89,7 @@ Example:
 curl -v "http://localhost:8080/routeplanner/map/simplemap?origin=A&destination=D&autonomy=10&fuelCost=2.5"
 {"length":25.0,"cost":6.25,"pathExists":true,"points":["A","B","D"]}
 ```
+
+## Limitations and suggested improvements
+* Concurrency control while creating a map (separated transactions to replace a map vs. path retrieval).
+* Application recovery if crashes/stops while creating a map.
