@@ -1,5 +1,7 @@
 package com.walmart.routeplanner.services.map.path;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,8 @@ import com.walmart.routeplanner.services.map.path.exception.InvalidInputExceptio
 @Service
 public class PathServiceImpl implements PathService {
 
+    private static final Logger logger = LoggerFactory.getLogger(PathServiceImpl.class);
+
     @Autowired
     private RouteService routeService;
     
@@ -28,8 +32,22 @@ public class PathServiceImpl implements PathService {
         checkValid(autonomy, "autonomy");
         checkValid(fuelCost, "fuelCost");
 
+        logger.info("Searching shortest path map={} origin={} destination={}", mapName, origin, destination);
+
         PathInfo path = routeService.shortestPath(mapName, origin, destination);
-        path.setCost(calculateCost(path, autonomy, fuelCost));
+        if (path.isPathExists()) {
+            logger.info("Found shortest path map={} origin={} destination={} length={}",
+                    mapName, origin, destination, path.getLength());
+
+            Double cost = calculateCost(path, autonomy, fuelCost);
+            logger.info("Calculated path cost map={} origin={} destination={} length={} autonomy={} fuelCost={} cost={}",
+                    mapName, origin, destination, path.getLength(), autonomy, fuelCost, cost);
+            path.setCost(cost);
+        } else {
+            logger.info("Path not found map={} origin={} destination={}",
+                    mapName, origin, destination);
+        }
+
         return path;
     }
 

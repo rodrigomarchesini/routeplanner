@@ -12,6 +12,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,6 +35,8 @@ import com.walmart.routeplanner.web.model.GenericResponse;
 @Path("/map")
 public class MapRest {
 
+    private static final Logger logger = LoggerFactory.getLogger(MapRest.class);
+
     @Autowired
     private MapTempImporterService mapService;
 
@@ -48,6 +52,8 @@ public class MapRest {
     public Response createOrReplaceMap(
             @PathParam("mapName") String mapName,
             InputStream inputStream) {
+        logger.info("Requested rest service createOrReplaceMap map={}", mapName);
+
         MapCreationResponse response = mapManager.addMap(mapName, inputStream);
         switch (response) {
             case OK_SCHEDULED:
@@ -81,6 +87,8 @@ public class MapRest {
             @QueryParam("autonomy") Double autonomy,
             @QueryParam("fuelCost") Double fuelCost)
             throws PointNotFoundException {
+        logger.info("Requested rest service createOrReplaceMap map={} origin={} destination={} autonomy={} fuelCost={}",
+                mapName, origin, destination, autonomy, fuelCost);
         return pathService.shortestPath(mapName, origin, destination, autonomy, fuelCost);
     }
 }

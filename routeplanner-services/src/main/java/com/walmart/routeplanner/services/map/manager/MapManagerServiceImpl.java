@@ -3,13 +3,15 @@ package com.walmart.routeplanner.services.map.manager;
 import java.io.File;
 import java.io.InputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import com.walmart.routeplanner.domain.services.MapService;
-import com.walmart.routeplanner.services.map.importer.database.MapDatabaseImporterServiceImpl;
+import com.walmart.routeplanner.services.map.importer.database.MapDatabaseImporter;
 import com.walmart.routeplanner.services.map.importer.temp.MapFileWriter;
 import com.walmart.routeplanner.services.map.processor.MapProcessor;
 import com.walmart.routeplanner.services.map.processor.RouteParser;
@@ -24,6 +26,7 @@ import com.walmart.routeplanner.services.map.processor.RouteProcessor;
 @Service
 public class MapManagerServiceImpl implements MapManagerService {
 
+    private static final Logger logger = LoggerFactory.getLogger(MapManagerServiceImpl.class);
     private static final int MAP_NAME_MAXLENGTH = 40;
 
     @Value("${map.tmpDir}")
@@ -45,6 +48,7 @@ public class MapManagerServiceImpl implements MapManagerService {
         }
 
         if (!checkMapLock(mapName)) {
+            logger.info("Map is busy map={}", mapName);
             return MapCreationResponse.ERROR_BUSY;
         }
 
@@ -60,13 +64,14 @@ public class MapManagerServiceImpl implements MapManagerService {
     }
 
     private boolean checkMapLock(String mapName) {
-        return !executor.getThreadPoolExecutor().getQueue().contains(mapName);
+        return !executor.getThreadPoolExecutor().getQueue().contains(MapDatabaseImporter.from(mapName));
     }
 
     private void saveToTempFile(String mapName, InputStream in) {
         File dir = createDirectoryIfNecessary();
         File outputFile = new File(dir, mapName + ".txt");
 
+        logger.info("Saving map to temp file map={} tempFile={}", mapName, outputFile.getName());
         RouteProcessor routeProcessor = new MapFileWriter(outputFile);
         RouteParser routeParser = new RouteParser();
         MapProcessor processor = new MapProcessor(routeProcessor, routeParser);
@@ -82,6 +87,7 @@ public class MapManagerServiceImpl implements MapManagerService {
     }
 
     private void scheduleDatabaseCreation(String mapName) {
-        executor.execute(new MapDatabaseImporterServiceImpl(mapService, mapName, mapFilesDir));
+        logger.info("Scheduling map importing process map={}", mapName);
+        executor.execute(new MapDatabaseImporter(mapService, mapName, mapFilesDir));
     }
 }
